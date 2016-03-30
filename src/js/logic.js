@@ -2,7 +2,8 @@ function Logic(CONST) {
     'use strict';
 
     var self = this,
-        piecesStartingCoordinates;
+        piecesStartingCoordinates,
+        Piece;
 
     piecesStartingCoordinates = (function() {
 
@@ -64,13 +65,26 @@ function Logic(CONST) {
         return piecesStartingCoordinates;
     } ());
 
-    function Piece(color, type) {
+    Piece = (function() {
+        function Piece(color, type) {
 
-        var self = this;
+            var self = this;
 
-        self.color = color;
-        self.type = type;
-    }
+            self.color = color;
+            self.type = type;
+        }
+
+        Piece.prototype.canMoveTo = function(from, to, board) {
+
+            var isValidMove = !!this.getPossibleMoves(from, board).filter(function(point) {
+                return point.x === to.x && point.y === to.y;
+            }).length;
+
+            return isValidMove;
+        }
+
+        return Piece;
+    } ());
 
     function Board() {
 
@@ -103,10 +117,10 @@ function Logic(CONST) {
         field[to.y][to.x] = field[from.y][from.x];
         field[from.y][from.x] = null;
     }
-    
+
     self.Board = Board;
     self.movePiece = movePiece;
     self.piecesStartingCoordinates = piecesStartingCoordinates;
-    
+
     return self;
 };

@@ -1,7 +1,7 @@
 (function(CONST, Canvas, Painter, Logic, Logger) {
     'use strict';
 
-    var logger = new Logger('console', CONST.environment),
+    var logger = new Logger('silent', CONST.environment),
         canvas = new Canvas(CONST.boardSize, CONST.boardSize),
         logic = new Logic(CONST),
         painter = new Painter(CONST, canvas, logic, logger),
@@ -10,7 +10,7 @@
         last = {},
         isDragging = false,
         draggedPiece = null;
-        
+
     painter.fillBoard();
     painter.drawPieces();
 
@@ -91,10 +91,16 @@
         offX = document.body.scrollLeft;
         offY = document.body.scrollTop;
         to = utils.coordsToTiles({ x: ev.clientX - offX, y: ev.clientY - offY });
-        
-        painter.drawPiece(to.x * CONST.tileSize, to.y * CONST.tileSize, draggedPiece.color, draggedPiece.type);
 
-        logic.movePiece(from, to, board);
+        if (board[to.y][to.x] && board[to.y][to.x].color === draggedPiece.color) {
+            painter.drawPiece(from.x * CONST.tileSize, from.y * CONST.tileSize, draggedPiece.color, draggedPiece.type)
+            painter.drawPiece(to.x * CONST.tileSize, to.y * CONST.tileSize, board[to.y][to.x].color, board[to.y][to.x].type);
+            
+        } else {
+            painter.drawPiece(to.x * CONST.tileSize, to.y * CONST.tileSize, draggedPiece.color, draggedPiece.type);
+
+            logic.movePiece(from, to, board);
+        }
 
         isDragging = false;
         draggedPiece = null;
