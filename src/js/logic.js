@@ -74,6 +74,28 @@ function Logic(CONST) {
             self.type = type;
         }
 
+        function generateMovesPawn(from, board) {
+            var moves = [],
+                pawn = board[from.y][from.x],
+                delta = (pawn.color === 'white') ? -1 : 1;
+            console.log(pawn, delta);
+            if (!board[from.y + delta][from.x]) {
+                moves.push({ x: from.x, y: from.y + delta });
+            }
+
+            if (board[from.y + delta][from.x + 1] && board[from.y + delta][from.x + 1].color !== pawn.color) {
+                moves.push({ x: from.x + 1, y: from.y + delta });
+            }
+
+            if (board[from.y + delta][from.x - 1] && board[from.y + delta][from.x - 1].color !== pawn.color) {
+                moves.push({ x: from.x - 1, y: from.y + delta });
+            }
+            console.log(moves);
+            return moves;
+        }
+
+        Piece.prototype.getPawnMoves = generateMovesPawn;
+        
         Piece.prototype.canMoveTo = function(from, to, board) {
 
             var isValidMove = !!this.getPossibleMoves(from, board).filter(function(point) {
@@ -81,7 +103,7 @@ function Logic(CONST) {
             }).length;
 
             return isValidMove;
-        }
+        };
 
         return Piece;
     } ());
@@ -123,4 +145,4 @@ function Logic(CONST) {
     self.piecesStartingCoordinates = piecesStartingCoordinates;
 
     return self;
-};
+}

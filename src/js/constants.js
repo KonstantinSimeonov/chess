@@ -4,6 +4,7 @@ var CONST = (function() {
     var consts = {
         black: '#3F92FF',
         white: '#FFFFFF',
+        red: '#E84F68',
         tiles: 8,
         boardSize: 300,
         tileSize: 300 / 8,
