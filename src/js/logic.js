@@ -74,28 +74,117 @@ function Logic(CONST) {
             self.type = type;
         }
 
-        function generateMovesPawn(from, board) {
-            var moves = [],
-                pawn = board[from.y][from.x],
-                delta = (pawn.color === 'white') ? -1 : 1;
-            console.log(pawn, delta);
-            if (!board[from.y + delta][from.x]) {
-                moves.push({ x: from.x, y: from.y + delta });
+        let generateMoves = (function() {
+            function isInsideBoard(x, y) {
+                return (0 <= x && x < CONST.boardSize) && (0 <= y && y < CONST.boardSize);
             }
 
-            if (board[from.y + delta][from.x + 1] && board[from.y + delta][from.x + 1].color !== pawn.color) {
-                moves.push({ x: from.x + 1, y: from.y + delta });
+            function generateMovesPawn(from, board) {
+                var moves = [],
+                    pawn = board[from.y][from.x],
+                    delta = (pawn.color === 'white') ? -1 : 1;
+                console.log(pawn, delta);
+                if (!board[from.y + delta][from.x]) {
+                    moves.push({ x: from.x, y: from.y + delta });
+                }
+
+                if (board[from.y + delta][from.x + 1] && board[from.y + delta][from.x + 1].color !== pawn.color) {
+                    moves.push({ x: from.x + 1, y: from.y + delta });
+                }
+
+                if (board[from.y + delta][from.x - 1] && board[from.y + delta][from.x - 1].color !== pawn.color) {
+                    moves.push({ x: from.x - 1, y: from.y + delta });
+                }
+                console.log(moves);
+                return moves;
+            }
+            
+            function generateKnightMoves(from, board) {
+                let moves = [],
+                    knight = board[from.y][from.x],
+                    deltas = [
+                        { x: 2, y: 1 },
+                        { x: 2, y: -1 },
+                        { x: -2, y: 1 },
+                        { x: -2, y: -1 },
+                        { x: 1, y: 2 },
+                        { x: 1, y: -2 },
+                        { x: -1, y: 2 },
+                        { x: -1, y: -2 },
+                    ];
+                    
+                deltas.forEach(function(delta) {
+                    
+                    if(!isInsideBoard(from.x + delta.x, from.y + delta.y)) {
+                        return;
+                    }
+                    
+                    let pieceAtTile = board[from.y + delta.y][from.x + delta.x],
+                        isValidMove =  !pieceAtTile || (pieceAtTile && pieceAtTile.color !== knight.color);
+                    
+                    if(isValidMove) {
+                        moves.push({ x: from.x + delta.x, y: from.y + delta.y });
+                    }
+                });
+                
+                return moves;
             }
 
-            if (board[from.y + delta][from.x - 1] && board[from.y + delta][from.x - 1].color !== pawn.color) {
-                moves.push({ x: from.x - 1, y: from.y + delta });
-            }
-            console.log(moves);
-            return moves;
-        }
+            function generateLinearMoves(from, board, deltas) {
+                let moves = [],
+                    piece = board[from.y][from.x];
 
-        Piece.prototype.getPawnMoves = generateMovesPawn;
-        
+                deltas.forEach(function(delta) {
+
+                    for (let x = from.x + delta.x, y = from.y + delta.y; isInsideBoard(x, y); x += delta.x, y += delta.y) {
+
+                        if (board[y][x]) {
+                            if (board[y][x].color !== piece.color) {
+                                moves.push({ x, y });
+                            }
+
+                            break;
+                        } else {
+                            moves.push({ x, y });
+                        }
+                    }
+
+                });
+
+                return moves;
+            }
+
+            const bishopDeltas = [
+                { x: 1, y: 1 },
+                { x: 1, y: -1 },
+                { x: -1, y: 1 },
+                { x: -1, y: -1 }
+            ];
+
+            const rookDeltas = [
+                { x: 1, y: 0 },
+                { x: -1, y: 0 },
+                { x: 0, y: 1 },
+                { x: 0, y: -1 }
+            ];
+            
+            const queenDeltas = bishopDeltas.concat(rookDeltas);
+
+            return {
+                forPawn: generateMovesPawn,
+                forBishop: (from, board) => generateLinearMoves(from, board, bishopDeltas),
+                forRook: (from, board) => generateLinearMoves(from, board, rookDeltas),
+                forQueen: (from, board) => generateLinearMoves(from, board, queenDeltas),
+                forKnight: generateKnightMoves
+            };
+        } ());
+
+        Piece.prototype.getPawnMoves = generateMoves.forPawn;
+        Piece.prototype.getBishopMoves = generateMoves.forBishop;
+        Piece.prototype.getQueenMoves = generateMoves.forQueen;
+        Piece.prototype.getRookMoves = generateMoves.forRook;
+        Piece.prototype.getKnightMoves = generateMoves.forKnight;
+
         Piece.prototype.canMoveTo = function(from, to, board) {
 
             var isValidMove = !!this.getPossibleMoves(from, board).filter(function(point) {

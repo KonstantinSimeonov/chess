@@ -33,6 +33,8 @@
 
         isDragging = true;
         draggedPiece = board[from.y][from.x];
+        
+        draggedPiece.getKnightMoves(from, board).forEach(x => painter.drawTile(x.x * CONST.tileSize, x.y * CONST.tileSize, 'red'));
     }
 
     function canvasMouseMove(ev) {
