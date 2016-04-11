@@ -66,11 +66,11 @@ function Logic(CONST) {
     } ());
 
     Piece = (function () {
-               
+
         function Piece(color, type) {
 
             var self = this;
-            
+
             self.color = color;
             self.type = type;
         }
@@ -78,45 +78,66 @@ function Logic(CONST) {
         function isInsideBoard(x, y) {
             return (0 <= x && x < CONST.boardSize) && (0 <= y && y < CONST.boardSize);
         }
-        
+
         Piece.prototype.is = function (color, type) {
-            
+
             let eqColor = this.color === color,
                 eqType = this.type === type;
-              
+
             return (eqColor && !type) || (eqType && !color) || (eqType && eqColor);
         };
+        
+        Piece.prototype.nullPiece = new Piece(null, null);
 
         return Piece;
     } ());
 
-    function Board() {
+    let Board = (function () {
 
-        var rows = [],
-            i,
-            j;
+        function Board() {
 
-        for (i = 0; i < CONST.boardSize; i += 1) {
-            rows[i] = [];
-        }
+            let self = this;
 
-        for (j = 0; j < CONST.boardSize; j += 1) {
-            rows[1][j] = new Piece('black', CONST.pieceTypes.pawn);
-            rows[6][j] = new Piece('white', CONST.pieceTypes.pawn);
-        }
-        
-        
-        
-        piecesStartingCoordinates.forEach(function (pieceSet) {
+            for (let i = 0; i < CONST.boardSize; i += 1) {
+                self[i] = [];
+            }
 
-            pieceSet.coords.forEach(function (piece) {
-                rows[piece.y][piece.x] = new Piece(piece.color, pieceSet.type);
+            for (let j = 0; j < CONST.boardSize; j += 1) {
+                self[1][j] = new Piece('black', CONST.pieceTypes.pawn);
+                self[6][j] = new Piece('white', CONST.pieceTypes.pawn);
+            }
+
+
+
+            piecesStartingCoordinates.forEach(function (pieceSet) {
+
+                pieceSet.coords.forEach(function (piece) {
+                    rows[piece.y][piece.x] = new Piece(piece.color, pieceSet.type);
+                });
+
             });
 
-        });
-
-        return rows;
-    }
+            return self;
+        }
+        
+        Board.prototype.piece = function (x, y, piece) {
+            
+            if(piece) {
+                // TODO: validation
+                
+                this[y][x] = piece;
+                return piece;
+            }
+            
+            if(this[y] && this[y][x]) {
+                return this[y][x];
+            }
+            
+            return Piece.prototype.nullPiece;
+        };
+        
+        return Board;
+    } ());
 
     function movePiece(from, to, field) {
 
