@@ -53,13 +53,10 @@ var MoveValidator = function (CONST) {
             xLeft = tile.x - 1,
             xRight = tile.x + 1;
         
-        if(isInsideBoard(xLeft, y) && board[y][xLeft] && board[y][xLeft].color === color && board[y][xLeft].type === 1) {
-            return true;
-        } 
-        
-        if(isInsideBoard(xLeft, y) && board[y][xRight] && board[y][xRight].color === color && board[y][xRight].type === 1) {
-            return true;
-        } 
+        let attackedFromLeft = board.piece(xLeft, y).is(color, CONST.pieceType.pawn),
+            attackedFromRight = board.piece(xRight, y).is(color, CONST.piece.pawn);
+            
+        return attackedFromLeft || attackedFromRight;
     }
 
     self.isAttacked = x => true;
