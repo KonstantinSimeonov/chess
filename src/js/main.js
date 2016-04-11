@@ -1,4 +1,4 @@
-(function(CONST, Canvas, Painter, Logic, Logger) {
+(function(CONST, Canvas, Painter, Logic, Logger, MoveValidator) {
     'use strict';
 
     var logger = new Logger('console', CONST.environment),
@@ -13,7 +13,9 @@
 
     painter.fillBoard();
     painter.drawPieces();
-
+    
+    let validator = new MoveValidator(CONST);
+    
     function canvasMouseDown(ev) {
 
         var offX = document.body.scrollLeft,
@@ -23,7 +25,10 @@
         if (!board[coords.y][coords.x]) {
             return;
         }
-
+        
+        console.log(validator.isAttacked(coords, board, 'white'));
+        console.log(validator.isAttacked(coords, board, 'black'));
+        
         // wtf js?
         from.x = coords.x;
         from.y = coords.y;
@@ -33,8 +38,7 @@
 
         isDragging = true;
         draggedPiece = board[from.y][from.x];
-        
-        draggedPiece.getKnightMoves(from, board).forEach(x => painter.drawTile(x.x * CONST.tileSize, x.y * CONST.tileSize, 'red'));
+       
     }
 
     function canvasMouseMove(ev) {
@@ -92,7 +96,9 @@
         offX = document.body.scrollLeft;
         offY = document.body.scrollTop;
         to = utils.coordsToTiles({ x: ev.clientX - offX, y: ev.clientY - offY });
-
+        
+        
+        
         if (board[to.y][to.x] && board[to.y][to.x].color === draggedPiece.color) {
             painter.drawPiece(from.x * CONST.tileSize, from.y * CONST.tileSize, draggedPiece.color, draggedPiece.type);
             painter.drawPiece(to.x * CONST.tileSize, to.y * CONST.tileSize, board[to.y][to.x].color, board[to.y][to.x].type);
@@ -111,4 +117,4 @@
     canvas.addEventListener('mousemove', canvasMouseMove);
     canvas.addEventListener('mouseup', canvasMouseUp);
 
-} (CONST, Canvas, Picasso, Logic, Logger));
+} (CONST, Canvas, Picasso, Logic, Logger, MoveValidator));

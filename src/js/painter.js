@@ -32,10 +32,19 @@ var Picasso = function(CONST, canvas, logic, logger) {
             }
         }
     }
-
+    
+    let typeMap = {
+        king: 1,
+        queen: 2,
+        knight: 3,
+        bishop: 4,
+        rook: 5,
+        pawn: 7
+    };
+    
     function drawPiece(x, y, color, type) {
 
-        var offsetX = (type - 1) * 60,
+        var offsetX = (typeMap[type] - 1) * 60,
             offsetY = (color === 'white' ? 0 : 1) * 60;
 
         ctx.drawImage(sprites, offsetX, offsetY, 60, 60, x, y, 35, 35);
