@@ -6,7 +6,7 @@
         logic = new Logic(CONST),
         painter = new Painter(CONST, canvas, logic, logger),
         board = new logic.Board(),
-        validator = new MoveValidator(CONST),
+        validator = new MoveValidator(CONST, utils),
         from = {},
         last = {};
 
@@ -90,7 +90,9 @@
 
         } else {
             painter.drawPiece(to.x * CONST.tileSize, to.y * CONST.tileSize, draggedPiece.color, draggedPiece.type);
-
+            
+            console.log(validator.isValidMove(from, to, board));
+            
             logic.movePiece(from, to, board);
         }
 
