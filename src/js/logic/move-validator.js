@@ -1,7 +1,7 @@
 var MoveValidator = function (CONST, utils) {
     'use strict';
 
-    let self = this;
+    const self = this;
 
     function invertColor(color) {
         if (color === 'white') {
@@ -52,29 +52,38 @@ var MoveValidator = function (CONST, utils) {
                 attackedFromLeft = board.piece(xLeft, y).is(color, CONST.pieceTypes.pawn),
                 attackedFromRight = board.piece(xRight, y).is(color, CONST.pieceTypes.pawn),
                 pawns = [];
-            
-            if(attackedFromLeft) {
+
+            if (attackedFromLeft) {
                 pawns.push({ x: xLeft, y: y });
             }
-            
-            if(attackedFromRight) {
+
+            if (attackedFromRight) {
                 pawns.push({ x: xRight, y: y });
             }
-            
+
             return pawns;
         },
 
-        byKing: (tile, board, color) => kingDeltas.filter(delta => board
-            .piece(tile.x + delta.x, tile.y + delta.y)
-            .is(color, CONST.pieceTypes.king)).map(delta => { return {x: tile.x + delta.x, y: tile.y + delta.y}; }),
+        byKing: function (tile, board, color) {
+            const kings = kingDeltas
+                .filter(delta => board
+                                    .piece(tile.x + delta.x, tile.y + delta.y)
+                                    .is(color, CONST.pieceTypes.king));
 
-        byKnight: (tile, board, color) => knightDeltas.filter(delta => board
-            .piece(tile.x + delta.x, tile.y + delta.y)
-            .is(color, CONST.pieceTypes.knight)).map(delta => { return {x: tile.x + delta.x, y: tile.y + delta.y}; }),
+            return kings.map(delta => { return { x: tile.x + delta.x, y: tile.y + delta.y }; });
+        },
+        byKnight: function (tile, board, color) {
+            const knights = knightDeltas
+                                    .filter(delta => board
+                                                        .piece(tile.x + delta.x, tile.y + delta.y)
+                                                        .is(color, CONST.pieceTypes.knight));
+                
+            return knights.map(delta => { return { x: tile.x + delta.x, y: tile.y + delta.y }; });
+        },
 
         byBishop: function (tile, board, color) {
             const oppositeColor = invertColor(color),
-                  bishops = [];
+                bishops = [];
 
             bishopDeltas.forEach(function (delta) {
                 let x = tile.x,
@@ -96,7 +105,7 @@ var MoveValidator = function (CONST, utils) {
         },
         byRook: function (tile, board, color) {
             const oppositeColor = invertColor(color),
-                  rooks = [];
+                rooks = [];
 
             rookDeltas.forEach(function (delta) {
                 let x = tile.x,
@@ -129,51 +138,51 @@ var MoveValidator = function (CONST, utils) {
 
         return byPawn.concat(byKing, byKnight, byBishop, byRook);
     };
-    
+
     function canMovePawnTo(from, to, board) {
         let pawn = board.piece(from.x, from.y);
         let deltaPawn = ((pawn.color === 'white') ? -1 : 1);
-        
-        if((to.y - from.y) !== deltaPawn) {
+
+        if ((to.y - from.y) !== deltaPawn) {
             return false;
         }
-        
-        if((from.x === to.x)) {
+
+        if ((from.x === to.x)) {
             return true;
-        } else if(from.x === (to.x - 1))  {
+        } else if (from.x === (to.x - 1)) {
             return board.piece(to.x - 1, to.y).is(invertColor(pawn));
-        } else if(from.x === (to.x + 1)) {
+        } else if (from.x === (to.x + 1)) {
             return board.piece(to.x + 1, to.y).is(invertColor(pawn));
         }
-        
+
         return false;
     }
-    
+
     self.isValidMove = function (from, to, board) {
-                
+
         const color = board.piece(from.x, from.y).color,
-              oppositeColor = invertColor(color);
-                 
+            oppositeColor = invertColor(color);
+
         let result = true;
-        
-        if(board.piece(from.x, from.y).is(undefined, CONST.pieceTypes.pawn)) {
+
+        if (board.piece(from.x, from.y).is(undefined, CONST.pieceTypes.pawn)) {
             result = canMovePawnTo(from, to, board);
         } else {
             result = self.isAttacked(to, board, color).some(tile => utils.equalAsPoints(tile, from));
         }
-        
-        if(result) {
+
+        if (result) {
             board.movePiece(from, to);
-            
+
             const kingLocation = board.coordinatesOf(color, CONST.pieceTypes.king),
-                  piecesAttackingKing = self.isAttacked(kingLocation, board, oppositeColor);
+                piecesAttackingKing = self.isAttacked(kingLocation, board, oppositeColor);
             console.log(piecesAttackingKing);
 
             result = !piecesAttackingKing.length;
-            
+
             board.movePiece(to, from);
         }
-        
+
         return result;
     };
 

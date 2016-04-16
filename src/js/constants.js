@@ -16,7 +16,8 @@ var CONST = (function() {
             rook: 'rook',
             pawn: 'pawn',
         },
-        environment: 'development'
+        environment: 'development',
+        spriteSrc: './imgs/pieces.png'
     };
 
     Object.freeze(consts);

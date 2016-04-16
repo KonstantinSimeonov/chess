@@ -1,11 +1,11 @@
-(function (CONST, Canvas, Painter, Logic, Logger, MoveValidator) {
+(function (CONST, Canvas, Painter, Logic, Logger, MoveValidator, Board) {
     'use strict';
 
     const logger = new Logger('console', CONST.environment),
         canvas = new Canvas(CONST.boardSize, CONST.boardSize),
         logic = new Logic(CONST),
         painter = new Painter(CONST, canvas, logic, logger),
-        board = new logic.Board(),
+        board = new logic.Board(CONST),
         validator = new MoveValidator(CONST, utils),
         from = {},
         last = {};
@@ -47,11 +47,10 @@
             offY = document.body.scrollTop,
             coords = utils.coordsToTiles({ x: ev.clientX - offX, y: ev.clientY - offY });
 
-        let x = last.x * CONST.tileSize,
-            y = last.y * CONST.tileSize,
+        let x = last.x,
+            y = last.y,
             type,
-            color,
-            tileColor;
+            color;
 
         if (!board.piece(last.x, last.y).is(null) && !utils.equalAsPoints(from, last)) {
 
@@ -60,16 +59,13 @@
 
             painter.drawPiece(x, y, color, type);
         } else {
-
-            tileColor = ((last.y * CONST.tiles + last.x) % 2 === last.y % 2) ? 'white' : 'black';
-
-            painter.drawTile(x, y, tileColor);
+            painter.drawTile(x, y);
         }
 
         last.x = coords.x;
         last.y = coords.y;
 
-        painter.drawPiece(coords.x * CONST.tileSize, coords.y * CONST.tileSize, draggedPiece.color, draggedPiece.type);
+        painter.drawPiece(coords.x, coords.y, draggedPiece.color, draggedPiece.type);
 
         isDragging = true;
     }
@@ -86,21 +82,17 @@
 
         if (board.piece(to.x, to.y).is(draggedPiece.color) || !(validator.isValidMove(from, to, board))) {
 
-            painter.drawPiece(from.x * CONST.tileSize, from.y * CONST.tileSize, draggedPiece.color, draggedPiece.type);
+            painter.drawPiece(from.x, from.y, draggedPiece.color, draggedPiece.type);
 
             if (!board.piece(to.x, to.y).is(null, null)) {
-                painter.drawPiece(to.x * CONST.tileSize, to.y * CONST.tileSize, board.piece(to.x, to.y).color, board.piece(to.x, to.y).type);
+                painter.drawPiece(to.x, to.y, board.piece(to.x, to.y).color, board.piece(to.x, to.y).type);
             } else {
-                let tileColor = ((last.y * CONST.tiles + last.x) % 2 === last.y % 2) ? 'white' : 'black';
-                painter.drawTile(to.x * CONST.tileSize, to.y * CONST.tileSize, tileColor);
+                painter.drawTile(to.x, to.y);
             }
 
         } else {
-            painter.drawPiece(to.x * CONST.tileSize, to.y * CONST.tileSize, draggedPiece.color, draggedPiece.type);
-
-
-
-            logic.movePiece(from, to, board);
+            painter.drawPiece(to.x, to.y, draggedPiece.color, draggedPiece.type);
+            board.movePiece(from, to, board);
         }
 
         isDragging = false;

@@ -6,14 +6,14 @@ var Picasso = function(CONST, canvas, logic, logger) {
         sprites = new Image(),
         self = this;
 
-    sprites.src = './imgs/pieces.png';
+    sprites.src = CONST.spriteSrc;
 
-    function drawTile(x, y, color) {
-        
+    function drawTile(x, y) {
+        const color = ((y * CONST.tiles + x) % 2 === y % 2) ? 'white' : 'black';
         fillStyle = ctx.fillStyle;
         ctx.fillStyle = CONST[color];
         
-        ctx.fillRect(x, y, CONST.tileSize, CONST.tileSize);
+        ctx.fillRect(x * CONST.tileSize, y * CONST.tileSize, CONST.tileSize, CONST.tileSize);
         
         ctx.fillStyle = fillStyle;
     }
@@ -28,7 +28,7 @@ var Picasso = function(CONST, canvas, logic, logger) {
         for (i = 0; i < tiles; i += 1) {
             for (j = 0; j < tiles; j += 1) {
                 isWhite = (i * tiles + j) % 2 === i % 2;
-                drawTile(CONST.tileSize * j, CONST.tileSize * i, isWhite ? 'white' : 'black');
+                drawTile(j, i, isWhite ? 'white' : 'black');
             }
         }
     }
@@ -47,7 +47,7 @@ var Picasso = function(CONST, canvas, logic, logger) {
         const offsetX = (typeMap[type] - 1) * 60,
             offsetY = (color === 'white' ? 0 : 1) * 60;
 
-        ctx.drawImage(sprites, offsetX, offsetY, 60, 60, x, y, 35, 35);
+        ctx.drawImage(sprites, offsetX, offsetY, 60, 60, x * CONST.tileSize, y * CONST.tileSize, 35, 35);
     }
 
     function drawPieces() {
@@ -57,17 +57,15 @@ var Picasso = function(CONST, canvas, logic, logger) {
             pawn = CONST.pieceTypes.pawn,
             drawData = logic.piecesStartingCoordinates;
             
-        let j;
-
-        for (j = 0; j < CONST.tiles; j += 1) {
-            drawPiece(j * CONST.tileSize, blackRow * CONST.tileSize, 'black', pawn);
-            drawPiece(j * CONST.tileSize, whiteRow * CONST.tileSize, 'white', pawn);
+        for (let x = 0; x < CONST.tiles; x += 1) {
+            drawPiece(x, blackRow, 'black', pawn);
+            drawPiece(x, whiteRow, 'white', pawn);
         }
 
         drawData.forEach(function(info) {
 
             info.coords.forEach(function(point) {
-                drawPiece(point.x * CONST.tileSize, point.y * CONST.tileSize, point.color, info.type);
+                drawPiece(point.x, point.y, point.color, info.type);
             });
 
         });

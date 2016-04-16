@@ -128,20 +128,26 @@ function Logic(CONST) {
 
             return Piece.prototype.nullPiece;
         };
-        
+
         Board.prototype.coordinatesOf = function (color, type) {
             const self = this;
-           for(let y = 0; y < CONST.tiles; y += 1) {
-               for(let x = 0; x < CONST.tiles; x += 1) {
-                   if(self.piece(x, y).is(color, type)) {
-                       return { x, y };
-                   }
-               }
-           }
-           
-           return null;  
+            for (let y = 0; y < CONST.tiles; y += 1) {
+                for (let x = 0; x < CONST.tiles; x += 1) {
+                    if (self.piece(x, y).is(color, type)) {
+                        return { x, y };
+                    }
+                }
+            }
+
+            return null;
         };
-        
+
+        function movePiece(from, to, board) {
+
+            board.piece(to.x, to.y, board.piece(from.x, from.y));
+            board.piece(from.x, from.y, Piece.prototype.nullPiece);
+        }
+
         Board.prototype.movePiece = function (from, to) {
             const self = this;
             movePiece(from, to, self);
@@ -150,14 +156,7 @@ function Logic(CONST) {
         return Board;
     } ());
 
-    function movePiece(from, to, board) {
-        
-        board.piece(to.x, to.y, board.piece(from.x, from.y));
-        board.piece(from.x, from.y, Piece.prototype.nullPiece);
-    }
-
     self.Board = Board;
-    self.movePiece = movePiece;
     self.piecesStartingCoordinates = piecesStartingCoordinates;
 
     return self;
