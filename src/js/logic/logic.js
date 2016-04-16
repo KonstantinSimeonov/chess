@@ -83,8 +83,16 @@ function Logic(CONST) {
 
             let eqColor = this.color === color,
                 eqType = this.type === type;
+            
+            if(eqColor && (type === undefined)) {
+                return true;
+            }
+            
+            if(eqType && (color === undefined)) {
+                return true;
+            }
 
-            return (eqColor && !type) || (eqType && !color) || (eqType && eqColor);
+            return eqType && eqColor;
         };
         
         Piece.prototype.nullPiece = new Piece(null, null);
@@ -96,23 +104,21 @@ function Logic(CONST) {
 
         function Board() {
 
-            let self = this;
+            const self = this;
 
-            for (let i = 0; i < CONST.boardSize; i += 1) {
+            for (let i = 0; i < CONST.tiles; i += 1) {
                 self[i] = [];
             }
 
-            for (let j = 0; j < CONST.boardSize; j += 1) {
+            for (let j = 0; j < CONST.tiles; j += 1) {
                 self[1][j] = new Piece('black', CONST.pieceTypes.pawn);
                 self[6][j] = new Piece('white', CONST.pieceTypes.pawn);
             }
 
-
-
             piecesStartingCoordinates.forEach(function (pieceSet) {
 
                 pieceSet.coords.forEach(function (piece) {
-                    rows[piece.y][piece.x] = new Piece(piece.color, pieceSet.type);
+                    self[piece.y][piece.x] = new Piece(piece.color, pieceSet.type);
                 });
 
             });
@@ -122,15 +128,17 @@ function Logic(CONST) {
         
         Board.prototype.piece = function (x, y, piece) {
             
+            const self = this;
+            
             if(piece) {
                 // TODO: validation
                 
-                this[y][x] = piece;
+                self[y][x] = piece;
                 return piece;
             }
             
-            if(this[y] && this[y][x]) {
-                return this[y][x];
+            if(self[y] && self[y][x]) {
+                return self[y][x];
             }
             
             return Piece.prototype.nullPiece;
@@ -139,10 +147,10 @@ function Logic(CONST) {
         return Board;
     } ());
 
-    function movePiece(from, to, field) {
-
-        field[to.y][to.x] = field[from.y][from.x];
-        field[from.y][from.x] = null;
+    function movePiece(from, to, board) {
+        
+        board.piece(to.x, to.y, board.piece(from.x, from.y));
+        board.piece(from.x, from.y, Piece.prototype.nullPiece);
     }
 
     self.Board = Board;

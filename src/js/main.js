@@ -6,6 +6,7 @@
         logic = new Logic(CONST),
         painter = new Painter(CONST, canvas, logic, logger),
         board = new logic.Board(),
+        validator = new MoveValidator(CONST),
         from = {},
         last = {},
         isDragging = false,
@@ -14,20 +15,18 @@
     painter.fillBoard();
     painter.drawPieces();
     
-    let validator = new MoveValidator(CONST);
-    
     function canvasMouseDown(ev) {
 
         var offX = document.body.scrollLeft,
             offY = document.body.scrollTop,
             coords = utils.coordsToTiles({ x: ev.clientX - offX, y: ev.clientY - offY });
-
-        if (!board[coords.y][coords.x]) {
+        // console.log(validator.isAttacked(coords, board, 'white'), 'white');
+        console.log(validator.isAttacked(coords, board, 'black'), 'black');
+        if (board.piece(coords.x, coords.y).is(null)) {
             return;
         }
         
-        console.log(validator.isAttacked(coords, board, 'white'));
-        console.log(validator.isAttacked(coords, board, 'black'));
+        
         
         // wtf js?
         from.x = coords.x;
