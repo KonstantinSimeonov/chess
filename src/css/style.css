@@ -5,3 +5,28 @@ canvas#field {
 #pieces {
     display: none;
 }
+
+#github-anchor {
+    height: 0;
+    width: 0;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    border-left: 250px solid transparent;
+    border-bottom: 250px solid transparent;
+    border-top: 250px solid #3F92FF;
+}
+
+#github-anchor:hover {
+    border-top: 250px solid lightseagreen;
+}
+
+a {
+    color: black;
+    position: absolute;
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+    top: -220px;
+    right: 30px;
+}
