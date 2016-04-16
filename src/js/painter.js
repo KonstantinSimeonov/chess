@@ -1,7 +1,7 @@
 var Picasso = function(CONST, canvas, logic, logger) {
     'use strict';
 
-    var ctx = canvas.getContext('2d'),
+    let ctx = canvas.getContext('2d'),
         fillStyle,
         sprites = new Image(),
         self = this;
@@ -20,7 +20,7 @@ var Picasso = function(CONST, canvas, logic, logger) {
 
     function fillBoard() {
         
-        var i,
+        let i,
             j,
             isWhite,
             tiles = CONST.tiles;
@@ -32,24 +32,32 @@ var Picasso = function(CONST, canvas, logic, logger) {
             }
         }
     }
-
+    
+    const typeMap = {
+        king: 1,
+        queen: 2,
+        knight: 3,
+        bishop: 4,
+        rook: 5,
+        pawn: 7
+    };
+    
     function drawPiece(x, y, color, type) {
 
-        var offsetX = (type - 1) * 60,
+        const offsetX = (typeMap[type] - 1) * 60,
             offsetY = (color === 'white' ? 0 : 1) * 60;
 
         ctx.drawImage(sprites, offsetX, offsetY, 60, 60, x, y, 35, 35);
-
-        logger.log('drawing a piece');
     }
 
     function drawPieces() {
         
-        var blackRow = 1,
+        const blackRow = 1,
             whiteRow = 6,
             pawn = CONST.pieceTypes.pawn,
-            drawData = logic.piecesStartingCoordinates,
-            j;
+            drawData = logic.piecesStartingCoordinates;
+            
+        let j;
 
         for (j = 0; j < CONST.tiles; j += 1) {
             drawPiece(j * CONST.tileSize, blackRow * CONST.tileSize, 'black', pawn);

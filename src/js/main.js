@@ -1,14 +1,16 @@
-(function(CONST, Canvas, Painter, Logic, Logger) {
+(function (CONST, Canvas, Painter, Logic, Logger, MoveValidator) {
     'use strict';
 
-    var logger = new Logger('console', CONST.environment),
+    const logger = new Logger('console', CONST.environment),
         canvas = new Canvas(CONST.boardSize, CONST.boardSize),
         logic = new Logic(CONST),
         painter = new Painter(CONST, canvas, logic, logger),
         board = new logic.Board(),
+        validator = new MoveValidator(CONST),
         from = {},
-        last = {},
-        isDragging = false,
+        last = {};
+
+    let isDragging = false,
         draggedPiece = null;
 
     painter.fillBoard();
@@ -16,14 +18,14 @@
 
     function canvasMouseDown(ev) {
 
-        var offX = document.body.scrollLeft,
+        const offX = document.body.scrollLeft,
             offY = document.body.scrollTop,
             coords = utils.coordsToTiles({ x: ev.clientX - offX, y: ev.clientY - offY });
 
-        if (!board[coords.y][coords.x]) {
+        if (board.piece(coords.x, coords.y).is(null)) {
             return;
         }
-
+        
         // wtf js?
         from.x = coords.x;
         from.y = coords.y;
@@ -33,35 +35,28 @@
 
         isDragging = true;
         draggedPiece = board[from.y][from.x];
-        
-        draggedPiece.getKnightMoves(from, board).forEach(x => painter.drawTile(x.x * CONST.tileSize, x.y * CONST.tileSize, 'red'));
+
     }
 
     function canvasMouseMove(ev) {
-
-        var offX,
-            offY,
-            tileColor,
-            color,
-            type,
-            coords,
-            x,
-            y;
-
         if (!isDragging || !draggedPiece) {
             return;
         }
 
-        offX = document.body.scrollLeft;
-        offY = document.body.scrollTop;
-        coords = utils.coordsToTiles({ x: ev.clientX - offX, y: ev.clientY - offY });
-        x = last.x * CONST.tileSize;
-        y = last.y * CONST.tileSize;
+        const offX = document.body.scrollLeft,
+            offY = document.body.scrollTop,
+            coords = utils.coordsToTiles({ x: ev.clientX - offX, y: ev.clientY - offY });
 
-        if (board[last.y][last.x] && !utils.equalAsPoints(from, last)) {
+        let x = last.x * CONST.tileSize,
+            y = last.y * CONST.tileSize,
+            type,
+            color,
+            tileColor;
 
-            color = board[last.y][last.x].color;
-            type = board[last.y][last.x].type;
+        if (!board.piece(last.x, last.y).is(null) && !utils.equalAsPoints(from, last)) {
+
+            color = board.piece(last.x, last.y).color;
+            type = board.piece(last.x, last.y).type;
 
             painter.drawPiece(x, y, color, type);
         } else {
@@ -81,22 +76,18 @@
 
     function canvasMouseUp(ev) {
 
-        var offX,
-            offY,
-            to;
-
         if (!isDragging || !draggedPiece) {
             return;
         }
 
-        offX = document.body.scrollLeft;
-        offY = document.body.scrollTop;
-        to = utils.coordsToTiles({ x: ev.clientX - offX, y: ev.clientY - offY });
+        const offX = document.body.scrollLeft,
+            offY = document.body.scrollTop,
+            to = utils.coordsToTiles({ x: ev.clientX - offX, y: ev.clientY - offY });
 
-        if (board[to.y][to.x] && board[to.y][to.x].color === draggedPiece.color) {
+        if (board.piece(to.x, to.y).is(draggedPiece.color)) {
             painter.drawPiece(from.x * CONST.tileSize, from.y * CONST.tileSize, draggedPiece.color, draggedPiece.type);
             painter.drawPiece(to.x * CONST.tileSize, to.y * CONST.tileSize, board[to.y][to.x].color, board[to.y][to.x].type);
-            
+
         } else {
             painter.drawPiece(to.x * CONST.tileSize, to.y * CONST.tileSize, draggedPiece.color, draggedPiece.type);
 
@@ -111,4 +102,4 @@
     canvas.addEventListener('mousemove', canvasMouseMove);
     canvas.addEventListener('mouseup', canvasMouseUp);
 
-} (CONST, Canvas, Picasso, Logic, Logger));
+} (CONST, Canvas, Picasso, Logic, Logger, MoveValidator));

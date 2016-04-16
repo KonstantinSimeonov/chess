@@ -1,7 +1,7 @@
 var CONST = (function() {
     'use strict';
     
-    var consts = {
+    const consts = {
         black: '#3F92FF',
         white: '#FFFFFF',
         red: '#E84F68',
@@ -9,12 +9,12 @@ var CONST = (function() {
         boardSize: 300,
         tileSize: 300 / 8,
         pieceTypes: {
-            king: 1,
-            queen: 2,
-            knight: 3,
-            officer: 4,
-            rook: 5,
-            pawn: 7,
+            king: 'king',
+            queen: 'queen',
+            knight: 'knight',
+            bishop: 'bishop',
+            rook: 'rook',
+            pawn: 'pawn',
         },
         environment: 'development'
     };
