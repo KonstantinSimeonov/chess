@@ -43,7 +43,7 @@ var Picasso = function(CONST, canvas, logic, logger) {
     };
     
     function drawPiece(x, y, color, type) {
-
+        
         const offsetX = (typeMap[type] - 1) * 60,
             offsetY = (color === 'white' ? 0 : 1) * 60;
 

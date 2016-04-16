@@ -143,7 +143,8 @@ function Logic(CONST) {
         };
         
         Board.prototype.movePiece = function (from, to) {
-            movePiece(from, to, this);
+            const self = this;
+            movePiece(from, to, self);
         };
 
         return Board;

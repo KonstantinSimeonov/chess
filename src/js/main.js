@@ -84,15 +84,22 @@
             offY = document.body.scrollTop,
             to = utils.coordsToTiles({ x: ev.clientX - offX, y: ev.clientY - offY });
 
-        if (board.piece(to.x, to.y).is(draggedPiece.color)) {
+        if (board.piece(to.x, to.y).is(draggedPiece.color) || !(validator.isValidMove(from, to, board))) {
+
             painter.drawPiece(from.x * CONST.tileSize, from.y * CONST.tileSize, draggedPiece.color, draggedPiece.type);
-            painter.drawPiece(to.x * CONST.tileSize, to.y * CONST.tileSize, board[to.y][to.x].color, board[to.y][to.x].type);
+
+            if (!board.piece(to.x, to.y).is(null, null)) {
+                painter.drawPiece(to.x * CONST.tileSize, to.y * CONST.tileSize, board.piece(to.x, to.y).color, board.piece(to.x, to.y).type);
+            } else {
+                let tileColor = ((last.y * CONST.tiles + last.x) % 2 === last.y % 2) ? 'white' : 'black';
+                painter.drawTile(to.x * CONST.tileSize, to.y * CONST.tileSize, tileColor);
+            }
 
         } else {
             painter.drawPiece(to.x * CONST.tileSize, to.y * CONST.tileSize, draggedPiece.color, draggedPiece.type);
-            
-            console.log(validator.isValidMove(from, to, board));
-            
+
+
+
             logic.movePiece(from, to, board);
         }
 

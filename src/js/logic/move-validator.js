@@ -151,32 +151,30 @@ var MoveValidator = function (CONST, utils) {
     
     self.isValidMove = function (from, to, board) {
                 
-        let color = board.piece(from.x, from.y).color;
-        
-        const kingLocation = board.coordinatesOf(color, CONST.pieceTypes.king);
-        
-        let piecesAttackingKing = self.isAttacked(kingLocation, board, invertColor(color));
+        const color = board.piece(from.x, from.y).color,
+              oppositeColor = invertColor(color);
+                 
         let result = true;
         
-        if(piecesAttackingKing.length) {
-            
+        if(board.piece(from.x, from.y).is(undefined, CONST.pieceTypes.pawn)) {
+            result = canMovePawnTo(from, to, board);
+        } else {
+            result = self.isAttacked(to, board, color).some(tile => utils.equalAsPoints(tile, from));
+        }
+        
+        if(result) {
             board.movePiece(from, to);
             
-            if(self.isAttacked(kingLocation, board, invertColor(color)).length) {
-                result = false;
-            }
+            const kingLocation = board.coordinatesOf(color, CONST.pieceTypes.king),
+                  piecesAttackingKing = self.isAttacked(kingLocation, board, oppositeColor);
+            console.log(piecesAttackingKing);
+
+            result = !piecesAttackingKing.length;
             
             board.movePiece(to, from);
         }
         
-        if(board.piece(from.x, from.y).is(undefined, CONST.pieceTypes.pawn)) {
-            
-            return canMovePawnTo(from, to, board);
-        }
-        
-        let piecesAttackTo = self.isAttacked(to, board, color).some(tile => utils.equalAsPoints(tile, from));
-        
-        return piecesAttackTo && result;
+        return result;
     };
 
     return self;
