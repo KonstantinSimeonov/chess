@@ -1,7 +1,7 @@
 var CONST = (function() {
     'use strict';
     
-    var consts = {
+    const consts = {
         black: '#3F92FF',
         white: '#FFFFFF',
         red: '#E84F68',

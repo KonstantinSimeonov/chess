@@ -2,7 +2,7 @@ function Logger(strategy, environment) {
     'use strict';
     
     // TODO: refactor
-    var self = this;
+    const self = this;
     
     if(strategy === 'silent') {
         self.log = function () {};

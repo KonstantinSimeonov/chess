@@ -1,20 +1,11 @@
 function Logic(CONST) {
     'use strict';
 
-    var self = this,
-        piecesStartingCoordinates,
-        Piece;
+    const self = this;
 
-    piecesStartingCoordinates = (function () {
+    const piecesStartingCoordinates = (function () {
 
-        var rooks,
-            knights,
-            bishops,
-            kings,
-            queens,
-            piecesStartingCoordinates;
-
-        rooks = {
+        const rooks = {
             type: CONST.pieceTypes.rook,
             coords: [
                 { x: 0, y: 0, color: 'black' },
@@ -22,50 +13,44 @@ function Logic(CONST) {
                 { x: 0, y: 7, color: 'white' },
                 { x: 7, y: 7, color: 'white' }
             ]
-        };
+        },
+            knights = {
+                type: CONST.pieceTypes.knight,
+                coords: [
+                    { x: 1, y: 0, color: 'black' },
+                    { x: 6, y: 0, color: 'black' },
+                    { x: 1, y: 7, color: 'white' },
+                    { x: 6, y: 7, color: 'white' }
+                ]
+            },
+            bishops = {
+                type: CONST.pieceTypes.bishop,
+                coords: [
+                    { x: 2, y: 0, color: 'black' },
+                    { x: 5, y: 0, color: 'black' },
+                    { x: 2, y: 7, color: 'white' },
+                    { x: 5, y: 7, color: 'white' }
+                ]
+            },
+            kings = {
+                type: CONST.pieceTypes.king,
+                coords: [
+                    { x: 4, y: 0, color: 'black' },
+                    { x: 4, y: 7, color: 'white' }
+                ]
+            },
+            queens = {
+                type: CONST.pieceTypes.queen,
+                coords: [
+                    { x: 3, y: 0, color: 'black' },
+                    { x: 3, y: 7, color: 'white' }
+                ]
+            };
 
-        knights = {
-            type: CONST.pieceTypes.knight,
-            coords: [
-                { x: 1, y: 0, color: 'black' },
-                { x: 6, y: 0, color: 'black' },
-                { x: 1, y: 7, color: 'white' },
-                { x: 6, y: 7, color: 'white' }
-            ]
-        };
-
-        bishops = {
-            type: CONST.pieceTypes.bishop,
-            coords: [
-                { x: 2, y: 0, color: 'black' },
-                { x: 5, y: 0, color: 'black' },
-                { x: 2, y: 7, color: 'white' },
-                { x: 5, y: 7, color: 'white' }
-            ]
-        };
-
-        kings = {
-            type: CONST.pieceTypes.king,
-            coords: [
-                { x: 4, y: 0, color: 'black' },
-                { x: 4, y: 7, color: 'white' }
-            ]
-        };
-
-        queens = {
-            type: CONST.pieceTypes.queen,
-            coords: [
-                { x: 3, y: 0, color: 'black' },
-                { x: 3, y: 7, color: 'white' }
-            ]
-        };
-
-        piecesStartingCoordinates = [rooks, knights, bishops, kings, queens];
-
-        return piecesStartingCoordinates;
+        return [rooks, knights, bishops, kings, queens];
     } ());
 
-    Piece = (function () {
+    const Piece = (function () {
 
         function Piece(color, type) {
 
@@ -83,24 +68,24 @@ function Logic(CONST) {
 
             let eqColor = this.color === color,
                 eqType = this.type === type;
-            
-            if(eqColor && (type === undefined)) {
+
+            if (eqColor && (type === undefined)) {
                 return true;
             }
-            
-            if(eqType && (color === undefined)) {
+
+            if (eqType && (color === undefined)) {
                 return true;
             }
 
             return eqType && eqColor;
         };
-        
+
         Piece.prototype.nullPiece = new Piece(null, null);
 
         return Piece;
     } ());
 
-    let Board = (function () {
+    const Board = (function () {
 
         function Board() {
 
@@ -125,30 +110,30 @@ function Logic(CONST) {
 
             return self;
         }
-        
+
         Board.prototype.piece = function (x, y, piece) {
-            
+
             const self = this;
-            
-            if(piece) {
+
+            if (piece) {
                 // TODO: validation
                 
                 self[y][x] = piece;
                 return piece;
             }
-            
-            if(self[y] && self[y][x]) {
+
+            if (self[y] && self[y][x]) {
                 return self[y][x];
             }
-            
+
             return Piece.prototype.nullPiece;
         };
-        
+
         return Board;
     } ());
 
     function movePiece(from, to, board) {
-        
+
         board.piece(to.x, to.y, board.piece(from.x, from.y));
         board.piece(from.x, from.y, Piece.prototype.nullPiece);
     }
