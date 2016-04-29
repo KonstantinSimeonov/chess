@@ -46,6 +46,7 @@ var MoveValidator = function (CONST, utils) {
 
     const attacked = {
         byPawn: function (tile, board, color) {
+            console.log(tile);
             const y = tile.y + ((color === 'white') ? 1 : -1),
                 xLeft = tile.x - 1,
                 xRight = tile.x + 1,
@@ -60,7 +61,7 @@ var MoveValidator = function (CONST, utils) {
             if (attackedFromRight) {
                 pawns.push({ x: xRight, y: y });
             }
-
+            console.log(y, xLeft, xRight);
             return pawns;
         },
 
@@ -150,9 +151,9 @@ var MoveValidator = function (CONST, utils) {
         if ((from.x === to.x) && (board.piece(to.x, to.y).is(null, null))) {
             return true;
         } else if (from.x === (to.x - 1)) {
-            return board.piece(to.x - 1, to.y).is(invertColor(pawn));
+            return board.piece(to.x, to.y).is(invertColor(pawn.color));
         } else if (from.x === (to.x + 1)) {
-            return board.piece(to.x + 1, to.y).is(invertColor(pawn));
+            return board.piece(to.x, to.y).is(invertColor(pawn.color));
         }
 
         return false;
@@ -176,7 +177,7 @@ var MoveValidator = function (CONST, utils) {
 
             const kingLocation = board.coordinatesOf(color, CONST.pieceTypes.king),
                 piecesAttackingKing = self.isAttacked(kingLocation, board, oppositeColor);
-            console.log(piecesAttackingKing);
+            // console.log(piecesAttackingKing);
 
             result = !piecesAttackingKing.length;
 
