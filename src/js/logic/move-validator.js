@@ -68,17 +68,17 @@ var MoveValidator = function (CONST, utils) {
         byKing: function (tile, board, color) {
             const kings = kingDeltas
                 .filter(delta => board
-                                    .piece(tile.x + delta.x, tile.y + delta.y)
-                                    .is(color, CONST.pieceTypes.king));
+                    .piece(tile.x + delta.x, tile.y + delta.y)
+                    .is(color, CONST.pieceTypes.king));
 
             return kings.map(delta => { return { x: tile.x + delta.x, y: tile.y + delta.y }; });
         },
         byKnight: function (tile, board, color) {
             const knights = knightDeltas
-                                    .filter(delta => board
-                                                        .piece(tile.x + delta.x, tile.y + delta.y)
-                                                        .is(color, CONST.pieceTypes.knight));
-                
+                .filter(delta => board
+                    .piece(tile.x + delta.x, tile.y + delta.y)
+                    .is(color, CONST.pieceTypes.knight));
+
             return knights.map(delta => { return { x: tile.x + delta.x, y: tile.y + delta.y }; });
         },
 
@@ -143,6 +143,20 @@ var MoveValidator = function (CONST, utils) {
     function canMovePawnTo(from, to, board) {
         let pawn = board.piece(from.x, from.y);
         let deltaPawn = ((pawn.color === 'white') ? -1 : 1);
+
+        const canMoveTwoTiles = [
+            !pawn.hasMoved,
+            from.x === to.x,
+            (to.y - from.y) === (2 * deltaPawn),
+            board.piece(to.x, to.y - 1).is(null),
+            board.piece(to.x, to.y).is(null)
+        ].every(x => x);
+        
+        if(canMoveTwoTiles) {
+            pawn.hasMoved = true;
+            pawn.hasMoveTwoTiles = true;
+            return true;
+        }
 
         if ((to.y - from.y) !== deltaPawn) {
             return false;
