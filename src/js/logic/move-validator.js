@@ -147,7 +147,7 @@ var MoveValidator = function (CONST, utils) {
             return false;
         }
 
-        if ((from.x === to.x)) {
+        if ((from.x === to.x) && (board.piece(to.x, to.y).is(null, null))) {
             return true;
         } else if (from.x === (to.x - 1)) {
             return board.piece(to.x - 1, to.y).is(invertColor(pawn));
