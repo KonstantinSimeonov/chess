@@ -89,7 +89,7 @@ var MoveValidator = function (CONST, utils) {
                 let x = tile.x,
                     y = tile.y;
 
-                while (!board.piece(x, y).is(null) && !board.piece(x, y).is(oppositeColor)) {
+                while (!board.piece(x, y).is(null, null) && !board.piece(x, y).is(oppositeColor)) {
                     x += delta.x;
                     y += delta.y;
 
@@ -111,7 +111,7 @@ var MoveValidator = function (CONST, utils) {
                 let x = tile.x,
                     y = tile.y;
 
-                while (!board.piece(x, y).is(null) && !board.piece(x, y).is(oppositeColor)) {
+                do {
                     x += delta.x;
                     y += delta.y;
 
@@ -120,7 +120,7 @@ var MoveValidator = function (CONST, utils) {
                         rooks.push({ x, y });
                         return;
                     }
-                }
+                } while (board.contains(x, y) && board.piece(x, y).is(null) && !board.piece(x, y).is(oppositeColor));
             });
 
             return rooks;

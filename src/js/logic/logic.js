@@ -128,7 +128,11 @@ function Logic(CONST) {
 
             return Piece.prototype.nullPiece;
         };
-
+        
+        Board.prototype.contains = function (x, y) {
+            return (0 <= x && x < CONST.tiles) && (0 <= y && y < CONST.tiles);
+        };
+        
         Board.prototype.coordinatesOf = function (color, type) {
             const self = this;
             for (let y = 0; y < CONST.tiles; y += 1) {
