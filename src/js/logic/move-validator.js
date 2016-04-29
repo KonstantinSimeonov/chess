@@ -191,7 +191,6 @@ var MoveValidator = function (CONST, utils) {
 
             const kingLocation = board.coordinatesOf(color, CONST.pieceTypes.king),
                 piecesAttackingKing = self.isAttacked(kingLocation, board, oppositeColor);
-            // console.log(piecesAttackingKing);
 
             result = !piecesAttackingKing.length;
 
