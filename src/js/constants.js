@@ -1,4 +1,4 @@
-var CONST = (function() {
+const CONST = (function() {
     'use strict';
     
     const consts = {

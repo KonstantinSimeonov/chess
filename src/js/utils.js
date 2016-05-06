@@ -1,4 +1,4 @@
-var utils = (function (CONST) {
+const utils = (function (CONST) {
     'use strict';
     
     function coordsToTiles(coords) {

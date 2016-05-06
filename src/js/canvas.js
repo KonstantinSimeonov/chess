@@ -1,4 +1,4 @@
-var Canvas = function(height, width) {
+const Canvas = function(height, width) {
     'use strict';
 
     const canvas = document.getElementById('field');

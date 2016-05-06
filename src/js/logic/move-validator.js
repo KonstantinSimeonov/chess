@@ -1,4 +1,4 @@
-var MoveValidator = function (CONST, utils) {
+function MoveValidator(CONST, utils) {
     'use strict';
 
     const self = this;
@@ -53,7 +53,7 @@ var MoveValidator = function (CONST, utils) {
             if (attackedFromRight) {
                 pawns.push({ x: xRight, y: y });
             }
-            console.log(y, xLeft, xRight);
+
             return pawns;
         },
 
@@ -143,8 +143,8 @@ var MoveValidator = function (CONST, utils) {
             board.piece(to.x, to.y - 1).is(null),
             board.piece(to.x, to.y).is(null)
         ].every(x => x);
-        
-        if(canMoveTwoTiles) {
+
+        if (canMoveTwoTiles) {
             pawn.hasMoved = true;
             pawn.hasMoveTwoTiles = true;
             return true;
