@@ -2,6 +2,15 @@
     'use strict';
 
     function onDocumentReady() {
+
+        function invertColor(color) {
+            if (color === 'white') {
+                return 'black';
+            }
+
+            return 'white';
+        }
+
         const logger = new Logger('console', CONST.environment),
             canvas = new Canvas(CONST.boardSize, CONST.boardSize),
             logic = new Logic(CONST),
@@ -12,7 +21,8 @@
             last = {};
 
         let isDragging = false,
-            draggedPiece = null;
+            draggedPiece = null,
+            currentColor = 'white';
 
         painter.fillBoard();
         painter.drawPieces();
@@ -23,10 +33,10 @@
                 offY = document.body.scrollTop,
                 coords = utils.coordsToTiles({ x: ev.clientX - offX, y: ev.clientY - offY });
 
-            if (board.piece(coords.x, coords.y).is(null)) {
+            if (!board.piece(coords.x, coords.y).is(currentColor)) {
                 return;
             }
-        
+
             // wtf js?
             from.x = coords.x;
             from.y = coords.y;
@@ -94,6 +104,7 @@
             } else {
                 painter.drawPiece(to.x, to.y, draggedPiece.color, draggedPiece.type);
                 board.movePiece(from, to, board);
+                currentColor = invertColor(currentColor);
             }
 
             isDragging = false;
@@ -105,7 +116,7 @@
         canvas.addEventListener('mouseup', canvasMouseUp);
 
     }
-    
+
     window.addEventListener('load', onDocumentReady, false);
 
 } (CONST, Canvas, Picasso, Logic, Logger, MoveValidator));
