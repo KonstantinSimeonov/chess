@@ -1,12 +1,11 @@
-(function (CONST, Canvas, Painter, Logic, Logger, MoveValidator, utils) {
+(function (CONST, Canvas, Painter, Logic, MoveValidator, utils) {
     'use strict';
 
     function onDocumentReady() {
 
-        const logger = new Logger('console', CONST.environment),
-            canvas = new Canvas(CONST.boardSize, CONST.boardSize),
+        const canvas = new Canvas(CONST.boardSize, CONST.boardSize),
             logic = new Logic(CONST),
-            painter = new Painter(CONST, canvas, logic, logger),
+            painter = new Painter(CONST, canvas, logic),
             board = new logic.Board(CONST),
             validator = new MoveValidator(CONST, utils),
             from = {},
@@ -21,15 +20,12 @@
 
         function canvasMouseDown(ev) {
 
-            const offX = document.body.scrollLeft,
-                offY = document.body.scrollTop,
-                coords = utils.coordsToTiles({ x: ev.clientX - offX, y: ev.clientY - offY });
-
+            const coords = utils.coordsToTiles({ x: ev.layerX, y: ev.layerY });
+            
             if (!board.piece(coords.x, coords.y).is(currentColor)) {
                 return;
             }
 
-            // wtf js?
             from.x = coords.x;
             from.y = coords.y;
 
@@ -38,7 +34,6 @@
 
             isDragging = true;
             draggedPiece = board[from.y][from.x];
-
         }
 
         function canvasMouseMove(ev) {
@@ -46,9 +41,7 @@
                 return;
             }
 
-            const offX = document.body.scrollLeft,
-                offY = document.body.scrollTop,
-                coords = utils.coordsToTiles({ x: ev.clientX - offX, y: ev.clientY - offY });
+            const coords = utils.coordsToTiles({ x: ev.layerX, y: ev.layerY });
 
             let x = last.x,
                 y = last.y,
@@ -79,9 +72,7 @@
                 return;
             }
 
-            const offX = document.body.scrollLeft,
-                offY = document.body.scrollTop,
-                to = utils.coordsToTiles({ x: ev.clientX - offX, y: ev.clientY - offY });
+            const to = utils.coordsToTiles({ x: ev.layerX, y: ev.layerY });
 
             if (board.piece(to.x, to.y).is(draggedPiece.color) || !(validator.isValidMove(from, to, board))) {
 
@@ -111,4 +102,4 @@
 
     window.addEventListener('load', onDocumentReady, false);
 
-} (CONST, Canvas, Picasso, Logic, Logger, MoveValidator, utils));
+} (CONST, Canvas, Picasso, Logic, MoveValidator, utils));

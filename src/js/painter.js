@@ -1,4 +1,4 @@
-const Picasso = function (CONST, canvas, logic, logger) {
+const Picasso = function (CONST, canvas, logic) {
     'use strict';
 
     const self = this,
