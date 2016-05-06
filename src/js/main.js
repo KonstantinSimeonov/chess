@@ -1,15 +1,7 @@
-(function (CONST, Canvas, Painter, Logic, Logger, MoveValidator, Board) {
+(function (CONST, Canvas, Painter, Logic, Logger, MoveValidator, utils) {
     'use strict';
 
     function onDocumentReady() {
-
-        function invertColor(color) {
-            if (color === 'white') {
-                return 'black';
-            }
-
-            return 'white';
-        }
 
         const logger = new Logger('console', CONST.environment),
             canvas = new Canvas(CONST.boardSize, CONST.boardSize),
@@ -104,7 +96,7 @@
             } else {
                 painter.drawPiece(to.x, to.y, draggedPiece.color, draggedPiece.type);
                 board.movePiece(from, to, board);
-                currentColor = invertColor(currentColor);
+                currentColor = utils.invertColor(currentColor);
             }
 
             isDragging = false;
@@ -119,4 +111,4 @@
 
     window.addEventListener('load', onDocumentReady, false);
 
-} (CONST, Canvas, Picasso, Logic, Logger, MoveValidator));
+} (CONST, Canvas, Picasso, Logic, Logger, MoveValidator, utils));

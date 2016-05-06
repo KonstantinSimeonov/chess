@@ -9,8 +9,17 @@ var utils = (function (CONST) {
         return (pointA.x === pointB.x) && (pointA.y === pointB.y);
     }
     
+    function invertColor(color) {
+            if (color === 'white') {
+                return 'black';
+            }
+
+            return 'white';
+        }
+    
     return {
         coordsToTiles,
-        equalAsPoints
+        equalAsPoints,
+        invertColor
     };
 } (CONST));

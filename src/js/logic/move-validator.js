@@ -3,14 +3,6 @@ var MoveValidator = function (CONST, utils) {
 
     const self = this;
 
-    function invertColor(color) {
-        if (color === 'white') {
-            return 'black';
-        }
-
-        return 'white';
-    }
-
     const knightDeltas = [
         { x: 1, y: -2 },
         { x: 1, y: 2 },
@@ -83,7 +75,7 @@ var MoveValidator = function (CONST, utils) {
         },
 
         byBishop: function (tile, board, color) {
-            const oppositeColor = invertColor(color),
+            const oppositeColor = utils.invertColor(color),
                 bishops = [];
 
             bishopDeltas.forEach(function (delta) {
@@ -105,7 +97,7 @@ var MoveValidator = function (CONST, utils) {
             return bishops;
         },
         byRook: function (tile, board, color) {
-            const oppositeColor = invertColor(color),
+            const oppositeColor = utils.invertColor(color),
                 rooks = [];
 
             rookDeltas.forEach(function (delta) {
@@ -165,9 +157,9 @@ var MoveValidator = function (CONST, utils) {
         if ((from.x === to.x) && (board.piece(to.x, to.y).is(null, null))) {
             return true;
         } else if (from.x === (to.x - 1)) {
-            return board.piece(to.x, to.y).is(invertColor(pawn.color));
+            return board.piece(to.x, to.y).is(utils.invertColor(pawn.color));
         } else if (from.x === (to.x + 1)) {
-            return board.piece(to.x, to.y).is(invertColor(pawn.color));
+            return board.piece(to.x, to.y).is(utils.invertColor(pawn.color));
         }
 
         return false;
@@ -176,7 +168,7 @@ var MoveValidator = function (CONST, utils) {
     self.isValidMove = function (from, to, board) {
 
         const color = board.piece(from.x, from.y).color,
-            oppositeColor = invertColor(color);
+            oppositeColor = utils.invertColor(color);
 
         let result = true;
 
