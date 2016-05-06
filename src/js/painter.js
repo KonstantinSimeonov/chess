@@ -43,7 +43,7 @@ const Picasso = function (CONST, canvas, logic, logger) {
         const offsetX = (typeMap[type] - 1) * 60,
             offsetY = (color === 'white' ? 0 : 1) * 60;
 
-        ctx.drawImage(sprites, offsetX, offsetY, 60, 60, x * CONST.tileSize, y * CONST.tileSize, 35, 35);
+        ctx.drawImage(sprites, offsetX, offsetY, 60, 60, x * CONST.tileSize, y * CONST.tileSize, CONST.tileSize, CONST.tileSize);
     }
 
     function drawPieces() {

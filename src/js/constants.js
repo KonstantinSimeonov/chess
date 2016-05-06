@@ -1,13 +1,16 @@
 const CONST = (function() {
     'use strict';
     
+    const boardSize = 400,
+          tilesCount = 8;
+    
     const consts = {
         black: '#3F92FF',
         white: '#FFFFFF',
         red: '#E84F68',
-        tiles: 8,
-        boardSize: 300,
-        tileSize: 300 / 8,
+        tiles: tilesCount,
+        boardSize: boardSize,
+        tileSize: boardSize / tilesCount,
         pieceTypes: {
             king: 'king',
             queen: 'queen',
