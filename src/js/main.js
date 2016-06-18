@@ -98,6 +98,7 @@
         canvas.addEventListener('mousemove', canvasMouseMove);
         canvas.addEventListener('mouseup', canvasMouseUp);
 
+        document.body.className = 'loaded';
     }
 
     window.addEventListener('load', onDocumentReady, false);

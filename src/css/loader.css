@@ -1,0 +1,36 @@
+#loader-wrapper .loader-section {
+    position: fixed;
+    top: 0;
+    width: 50%;
+    height: 100%;
+    z-index: 1;
+}
+
+#loader-wrapper .loader-section.section-left {
+    left: 0;
+    background: url('../imgs/section-left-bg.jpg');
+    background-size: 100% 100%;
+}
+
+#loader-wrapper .loader-section.section-right {
+    right: 0;
+    background: url('../imgs/section-right-bg.jpg');
+    background-size: 100% 100%;
+}
+
+.loaded #loader-wrapper .loader-section.section-left {
+    -webkit-transform: translateX(-100%);
+    -ms-transform: translateX(-100%);
+    transform: translateX(-100%);
+}
+
+.loaded #loader-wrapper .loader-section.section-right {
+    -webkit-transform: translateX(100%);
+    -ms-transform: translateX(100%);
+    transform: translateX(100%);
+}
+
+.loaded #loader-wrapper .loader-section.section-right, .loaded #loader-wrapper .loader-section.section-left {
+    -webkit-transition: all 1s 1s cubic-bezier(0.645, 0.045, 0.355, 1.000);
+    transition: all 1s 1s cubic-bezier(0.645, 0.045, 0.355, 1.000);
+}
