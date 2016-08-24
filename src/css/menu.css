@@ -1,0 +1,43 @@
+aside {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 5%;
+    height: 100%;
+}
+
+.loaded aside #menu {
+    float: left;
+    left: 0;
+    opacity: 0;
+    transition: opacity 1s ease-out;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-color: #3F92FF;
+}
+
+.loaded aside:hover #menu {
+    opacity: 1
+}
+
+nav ul {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 50%
+}
+
+nav li {
+    list-style: none;
+    margin: 10% auto auto 10%;
+}
+
+li button {
+    background-color: transparent;
+    border: 0;
+}
+
+li button span {
+    content: 'U+23F0'
+}

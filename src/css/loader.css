@@ -15,7 +15,7 @@
 #loader-wrapper .loader-section.section-right {
     right: 0;
     background: url('../imgs/section-right-bg.jpg');
-    background-size: 100% 100%;
+    background-size: 100% 100%
 }
 
 .loaded #loader-wrapper .loader-section.section-left {
